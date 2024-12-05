@@ -20,7 +20,7 @@ namespace UITestingPlaygroundTests
         [SetUp]
         public void SetUp()
         {
-            driver = new ChromeDriver(@"C:\Users\opilane\source\repos\SeleniumRepo-main\Selen\selenium-task-master\UITestingPlayground\drivers");
+            driver = new ChromeDriver(@"C:\Users\opilane\source\repos\DorianSelenium\selenium-task-master\UITestingPlayground\drivers");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }

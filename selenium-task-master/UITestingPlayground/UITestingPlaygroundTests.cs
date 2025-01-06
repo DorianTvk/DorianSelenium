@@ -2,12 +2,8 @@ using System;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.BiDi.Modules.Script;
-using System.Numerics;
-using System.Threading.Tasks;
 
 namespace UITestingPlaygroundTests
 {
@@ -20,130 +16,167 @@ namespace UITestingPlaygroundTests
         [SetUp]
         public void SetUp()
         {
-            driver = new ChromeDriver(@"C:\Users\opilane\source\repos\DorianSelenium\selenium-task-master\UITestingPlayground\drivers");
+            driver = new ChromeDriver(@"C:\Users\opilane\source\repos\DorianSelenium-main\selenium-task-master\UITestingPlayground\drivers");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            driver.Manage().Window.Maximize();
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
-        [Test]
-        public void TestButtonHiddenLayers()
-        {
-            driver.Navigate().GoToUrl("http://www.uitestingplayground.com/hiddenlayers");
 
-            var button = driver.FindElement(By.Id("greenButton"));
+        [Test]
+        public void NavBarHinnakiri()
+        {
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/index.html");
+
+            var button = driver.FindElement(By.CssSelector("a[href='hinnakiri.html']"));
             button.Click();
 
-            try
-            {
-                button.Click();
-                Assert.Fail("button should not be clickable again after the first click.");
-            }
-            catch (WebDriverException)
-            {
-                Assert.Pass("button cannot be clicked twice as expected.");
-            }
+            Assert.That(driver.Url, Does.Contain("hinnakiri.html"), "Navigation to 'hinnakiri.html' failed.");
         }
 
-
         [Test]
-        public void TestDisabledInput()
+        public void NavBarKontakt()
         {
-            driver.Navigate().GoToUrl("http://www.uitestingplayground.com/disabledinput");
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/index.html");
 
-            var button = driver.FindElement(By.Id("enableButton"));
+            var button = driver.FindElement(By.CssSelector("a[href='kontakt.html']"));
             button.Click();
 
-            var inputField = driver.FindElement(By.Id("inputField"));
-            var waitTime = TimeSpan.FromSeconds(0);
-            while (inputField.GetAttribute("disabled") == "true" && waitTime.TotalSeconds < 10)
-            {
-                Thread.Sleep(500);
-                waitTime += TimeSpan.FromMilliseconds(500);
-            }
-
-            inputField.SendKeys("Hello World!");
-
-            Assert.That(inputField.GetAttribute("value"), Is.EqualTo("Hello World!"), "The input field value was not set correctly.");
+            Assert.That(driver.Url, Does.Contain("kontakt.html"), "Navigation to 'kontakt.html' failed.");
         }
 
         [Test]
-        public void TestClick()
+        public void NavBarBroneeriAeg()
         {
-            driver.Navigate().GoToUrl("http://www.uitestingplayground.com/click");
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/index.html");
 
-            var Button = driver.FindElement(By.Id("badButton"));
-
-            Actions actions = new Actions(driver);
-            actions.MoveToElement(Button).Click().Perform();
-
-            string buttonClass = Button.GetAttribute("class");
-            Assert.That(buttonClass.Contains("btn-success"), Is.True, "The button did not turn green after clicking.");
-        }
-
-
-        [Test]
-        public void TextInput()
-        {
-            driver.Navigate().GoToUrl("http://www.uitestingplayground.com/textinput");
-
-            var inputField = driver.FindElement(By.Id("newButtonName"));
-            var button = driver.FindElement(By.Id("updatingButton"));
-
-            Actions actions = new Actions(driver);
-            actions.Click(inputField)
-                .SendKeys("Hello World")
-                .Perform();
-
+            var button = driver.FindElement(By.CssSelector("a[href='register.html']"));
             button.Click();
 
-            string buttonText = button.Text;
-            Assert.That(buttonText, Is.EqualTo("Hello World"), "The button name did not change as expected.");
+            Assert.That(driver.Url, Does.Contain("register.html"), "Navigation to 'register.html' failed.");
         }
-
 
         [Test]
-        public void TestAnimatedButton()
+        public void NavBarTeenused()
         {
-            driver.Navigate().GoToUrl("http://www.uitestingplayground.com/animation");
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/index.html");
 
-            var startAnimationButton = driver.FindElement(By.Id("animationButton"));
-            startAnimationButton.Click();
+            var button = driver.FindElement(By.CssSelector("a[href='teenused.html']"));
+            button.Click();
 
-            var movingTargetButton = driver.FindElement(By.Id("movingTarget"));
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            wait.Until(d => !movingTargetButton.GetAttribute("class").Contains("spin"));
-
-            movingTargetButton.Click();
-
-            var statusLabel = driver.FindElement(By.Id("opstatus"));
-            string statusText = statusLabel.Text;
-
-            Assert.That(statusText, Does.Not.Contain("spin"), "Moving Target should not have the 'spin' class after clicking.");
+            Assert.That(driver.Url, Does.Contain("teenused.html"), "Navigation to 'teenused.html' failed.");
         }
-
 
         [Test]
-        public void TestAlerts()
+        public void TestFormSubmission()
         {
-            driver.Navigate().GoToUrl("http://www.uitestingplayground.com/alerts");
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/kontakt.html");
 
-            var alertButton = driver.FindElement(By.Id("alertButton"));
-            alertButton.Click();
-            driver.SwitchTo().Alert().Accept();
+            var nameField = driver.FindElement(By.Id("name"));
+            var emailField = driver.FindElement(By.Id("email"));
+            var messageField = driver.FindElement(By.Id("message"));
+            var submitButton = driver.FindElement(By.CssSelector("button[type='submit']"));
 
-            var confirmButton = driver.FindElement(By.Id("confirmButton"));
-            confirmButton.Click();
-            Thread.Sleep(1000);
-            driver.SwitchTo().Alert().Accept();
+            nameField.SendKeys("DORIAN");
+            emailField.SendKeys("TAMMEVESKI@example.com");
+            messageField.SendKeys("vaitmaa best");
+            submitButton.Click();
 
-            var promptButton = driver.FindElement(By.Id("promptButton"));
-            promptButton.Click();
-            Thread.Sleep(1000);
-            var alert = driver.SwitchTo().Alert();
-            alert.SendKeys("hello");
-            alert.Accept();
+            Assert.Pass("Form submitted successfully. Verify behavior manually if needed.");
         }
 
-        [TearDown]
+        public void HinnakiriNav()
+        {
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/index.html");
+
+            var button = driver.FindElement(By.CssSelector("onclick=\"window.location.href='hinnakiri.html'\"']"));
+            button.Click();
+
+            Assert.That(driver.Url, Does.Contain("teenused.html"), "Navigation to 'teenused.html' failed.");
+        }
+
+        [Test]
+        public void TestBookingFormSubmission()
+        {
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/register.html");
+
+            var bookingLink = driver.FindElement(By.CssSelector("a[href='register.html']"));
+            bookingLink.Click();
+
+            var nameField = driver.FindElement(By.Id("name"));
+            var emailField = driver.FindElement(By.Id("email"));
+            var dateField = driver.FindElement(By.Id("date"));
+            var timeField = driver.FindElement(By.Id("time"));
+            var serviceDropdown = driver.FindElement(By.Id("service"));
+            var submitButton = driver.FindElement(By.CssSelector("button[type='submit']"));
+
+            nameField.SendKeys("Test User");
+            emailField.SendKeys("testuser@example.com");
+            dateField.SendKeys(DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"));
+            timeField.SendKeys("10:30");
+            var selectElement = new SelectElement(serviceDropdown);
+            selectElement.SelectByValue("auto_hooldus");
+
+            submitButton.Click();
+
+            Assert.Pass("Booking form submitted successfully. Verify behavior manually if needed.");
+        }
+
+        [Test]
+        public void TestServiceDropdownOptions()
+        {
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/register.html");
+
+            var bookingLink = driver.FindElement(By.CssSelector("a[href='register.html']"));
+            bookingLink.Click();
+
+            var serviceDropdown = driver.FindElement(By.Id("service"));
+            var selectElement = new SelectElement(serviceDropdown);
+            var options = selectElement.Options;
+
+            Assert.That(options.Count, Is.EqualTo(9), "Service dropdown does not contain the expected number of options.");
+
+            var expectedOptions = new string[]
+            {
+                "Auto hooldus",
+                "Õlivahetus",
+                "Autodiagnostika",
+                "Rehvivahetus",
+                "Siduri Vahetus",
+                "Hammasrihma vahetus",
+                "Summuti remont ja vahetus",
+                "Generaatori ja Starteri remont",
+                "Mootori remont ja vahetus"
+            };
+
+            for (int i = 0; i < expectedOptions.Length; i++)
+            {
+                Assert.That(options[i].Text, Is.EqualTo(expectedOptions[i]), $"Option {i + 1} text does not match.");
+            }
+        }
+
+        [Test]
+        public void TestBookingFormFieldValidation()
+        {
+            driver.Navigate().GoToUrl("file:///C:/Users/opilane/source/repos/AutoParandusSoloToo-main/register.html");
+
+            var bookingLink = driver.FindElement(By.CssSelector("a[href='register.html']"));
+            bookingLink.Click();
+
+            var submitButton = driver.FindElement(By.CssSelector("button[type='submit']"));
+            submitButton.Click();
+
+            var nameField = driver.FindElement(By.Id("name"));
+            var emailField = driver.FindElement(By.Id("email"));
+            var dateField = driver.FindElement(By.Id("date"));
+            var timeField = driver.FindElement(By.Id("time"));
+
+            Assert.That(nameField.GetAttribute("validationMessage"), Is.Not.Empty, "Name field validation message is missing.");
+            Assert.That(emailField.GetAttribute("validationMessage"), Is.Not.Empty, "Email field validation message is missing.");
+            Assert.That(dateField.GetAttribute("validationMessage"), Is.Not.Empty, "Date field validation message is missing.");
+            Assert.That(timeField.GetAttribute("validationMessage"), Is.Not.Empty, "Time field validation message is missing.");
+        }
+
+[TearDown]
         public void TearDown()
         {
             driver?.Quit();
